@@ -3,6 +3,8 @@ const prisma = new PrismaClient();
 
 // import type { User } from "@prisma/client"
 
+type UserNoId = Omit<User, "id">;
+
 async function createUser(name: string, email: string) {
     const user = await prisma.user.create({
         data: {
@@ -17,8 +19,8 @@ async function createUser(name: string, email: string) {
 async function listUsers() {
     const users = await prisma.user.findMany({
         select: {
-            name: true,
-            email: true
+            id: true,
+            name: true
         }
     });
     console.log(users);
@@ -46,11 +48,38 @@ async function deleteUser(id: number) {
         where: {id: id}
     })
     console.log(result);
+}
+
+async function createUserMany(...rest: UserNoId[]) {
+    const result = await prisma.user.createMany({
+        data: rest
+    })
+    console.log(result);
     
 }
 
+const victor: UserNoId = {
+    name: "Victor",
+    email: "victor@abc.com",
+    age: 20
+}
+
+const alexander: UserNoId = {
+    name: "Alexander",
+    email: "alexander@abc.com",
+    age: 25
+}
+
+const sebastian: UserNoId = {
+    name: "Sebastian",
+    email: "sebastian@abc.com",
+    age: 30
+}
+
 // createUser("Alexander", "alexander@abc.com");
-listUsers();
 // getUserById(2);
 // updateUser(1, "Victor Rinnegård");
-// deleteUser(1)
+// deleteUser(2)
+// deleteUser(3)
+// createUserMany(victor, alexander, sebastian);
+listUsers();
