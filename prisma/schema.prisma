@@ -13,9 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
-  age Int?
+model Student {
+  id     String   @id @default(cuid())
+  name   String
+  email  String
+  Course Course[]
+}
+
+model Teacher {
+  id     String   @id @default(cuid())
+  name   String
+  email  String
+  Course Course[]
+}
+
+model Course {
+  id        String    @id @default(cuid())
+  name      String
+  teacher   Teacher   @relation(fields: [teacherId], references: [id])
+  students  Student[]
+  teacherId String
 }
